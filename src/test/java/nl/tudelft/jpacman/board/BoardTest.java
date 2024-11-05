@@ -1,75 +1,51 @@
 package nl.tudelft.jpacman.board;
+
 import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-/** Test.
-    * a
-    * a
-    */
+
+/**
+ * This is a test file for board building.
+ */
 public class BoardTest {
-    
-    private Board board;
-    private Square[][] grid;
-    private Board boardNull;
-    private Square[][] gridNull;
 
-    /** Test.
-    * a
-    * a
-    */
-    @BeforeEach
-    public void setUp() {
-        grid = new Square[1][1];
-        grid[0][0] = new BasicSquare();
-        board = new Board(grid);
+    /**
+     * Tests board creation with a single valid square and verifies
+     * that the board's invariant holds true after initialization.
+     */
+    @Test
+    void testBoardWithValidSquare() {
+        Square basicSquare = new BasicSquare();
+        Square[][] basicGrid = new Square[1][1];
+        basicGrid[0][0] = basicSquare;
+        Board board = new Board(basicGrid);
 
-/** Test.
-    * a
-    * a
-    */
-        gridNull = new Square[1][1];
-        gridNull[0][0] = null;
-        boardNull = new Board(gridNull);
+        // Assert that the board's invariant is true
+        assertThat(board.invariant()).isTrue();
     }
 
-/** Test.
-    * a
-    * a
-    */
-//     @Test
-//     public void testGetWidth() {
-//         assertThat(board.getWidth()).isEqualTo(1);
-//     }
-    
-// /** Test.
-//     * a
-//     * a
-//     */
-//     @Test
-//     public void testGetHeight() {
-//         assertThat(board.getHeight()).isEqualTo(1);
-//     }
+    /**
+     * Tests the withinBorders method to check if the provided coordinates
+     * fall within the bounds of the board's grid.
+     */
+    @Test
+    void testWithinBorders() {
+        Square basicSquare = new BasicSquare();
+        Square[][] basicGrid = new Square[2][2];
+        basicGrid[0][0] = basicSquare;
+        basicGrid[0][1] = basicSquare;
+        basicGrid[1][0] = basicSquare;
+        basicGrid[1][1] = basicSquare;
+        Board board = new Board(basicGrid);
 
-// /** Test.
-//     * a
-//     * a
-//     */
-//     @Test
-//     public void testSquareAt() {
-//         Square square = board.squareAt(0, 0);
-//         assertThat(square).isNotNull();
-//     }
+        // Test for valid coordinates (within the grid)
+        assertThat(board.withinBorders(0, 0)).isTrue();
+        assertThat(board.withinBorders(1, 1)).isTrue();
 
-// /** Test.
-//     * a
-//     * a
-//     */
-//     @Test
-//     public void testSquareAtNull() {
-//         Square square = boardNull.squareAt(0, 0);
-//         assertThat(square).isNull();
-//     }
+        // Test for invalid coordinates (outside the grid)
+        assertThat(board.withinBorders(2, 2)).isFalse();
+        assertThat(board.withinBorders(-1, 0)).isFalse();
+        assertThat(board.withinBorders(0, -1)).isFalse();
+    }
 
     /**
      * Tests the board's behavior when accessing a square at specific coordinates,
@@ -85,5 +61,4 @@ public class BoardTest {
         // Assert that squareAt(0, 0) returns the correct square from grid
         assertThat(board.squareAt(0, 0)).isEqualTo(basicGrid[0][0]);
     }
-    
 }
